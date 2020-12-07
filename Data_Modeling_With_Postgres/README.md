@@ -4,7 +4,7 @@
 
 - Sparkify wants to analyze the data they've been collecting on songs and user activity on their new music streaming app.
 - Understand what songs users are listening to.
-- Role is to create a database schema and ETL pipeline for this analysis.
+- Job is to create a database schema and ETL pipeline for this analysis.
 
 ### DATA
 
@@ -21,26 +21,32 @@
 
 - Fact Table
     - songplays
-        - songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent
+        - `songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent`
 - Dimension Tables
     - users
-        - user_id, first_name, last_name, gender, level
+        - `user_id, first_name, last_name, gender, level`
     - songs
-        - song_id, title, artist_id, year, duration
+        - `song_id, title, artist_id, year, duration`
     - artists
-        - artist_id, name, location, latitude, longitude
+        - `artist_id, name, location, latitude, longitude`
     - time
-        - start_time, hour, day, week, month, year, weekday
+        - `start_time, hour, day, week, month, year, weekday`
+
+The schema is defined as per STAR schema.
+
+### ETL pipeline
+
+DATA_IN_LOCAL_DIRS ---> (Python Script) ---> POSTGRES DB 
 
 ### Project Files
 
-1. `test.ipynb` used to validate data in each table of our database.
-2. `create_tables.py` contains code for setting up database `sparkifydb` and creates fact and dimensions table.
+1. `create_tables.py` contains code for setting up database `sparkifydb` and creates fact and dimensions table.
+2. `sql_queries.py` contains sql queries, dropping and creating fact and dimensions tables in addition to insertion query.
 3. `etl.ipynb` reads and processes a single file from `song_data` and `log_data` and loads the data into tables.
-4. `etl.py` reads and processes files from `song_data` and `log_data` and loads them into tables.
-5. `sql_queries.py` contains sql queries, dropping and creating fact and dimensions tables in addition to insertion query.
+4. `test.ipynb` used to validate data in each table of our database.
+5. `etl.py` reads and processes files from `song_data` and `log_data` and loads them into tables.
 
-### DATA ANALYSIS
+### Data Analysis
 
 Q: How many users are paid and how many are on free subscription ?
 
