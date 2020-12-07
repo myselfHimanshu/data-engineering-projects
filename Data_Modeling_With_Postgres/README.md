@@ -1,0 +1,48 @@
+# Data Modeling with Postgres
+
+### INTRODUCTION
+
+- Sparkify wants to analyze the data they've been collecting on songs and user activity on their new music streaming app.
+- Understand what songs users are listening to.
+- Role is to create a database schema and ETL pipeline for this analysis.
+
+### DATA
+
+- Song Dataset
+    - contains metadata about a song and the artist of that song.
+    - sample record
+        - `{"num_songs": 1, "artist_id": "ARJIE2Y1187B994AB7", "artist_latitude": null, "artist_longitude": null, "artist_location": "", "artist_name": "Line Renaud", "song_id": "SOUPIRU12A6D4FA1E1", "title": "Der Kleine Dompfaff", "duration": 152.92036, "year": 0}`
+- Log Dataset
+    - activity logs from a music streaming app.
+    - sample log
+        - `{"artist": null, "auth": "Logged In", "firstName": "Walter", "gender": "M", "itemInSession": 0, "lastName": "Frye", "length": null, "level": "free", "location": "San Francisco-Oakland-Hayward, CA", "method": "GET","page": "Home", "registration": 1540919166796.0, "sessionId": 38, "song": null, "status": 200, "ts": 1541105830796, "userAgent": "\"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/36.0.1985.143 Safari\/537.36\"", "userId": "39"}`
+
+### Schema for Song Play Analysis
+
+- Fact Table
+    - songplays
+        - songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent
+- Dimension Tables
+    - users
+        - user_id, first_name, last_name, gender, level
+    - songs
+        - song_id, title, artist_id, year, duration
+    - artists
+        - artist_id, name, location, latitude, longitude
+    - time
+        - start_time, hour, day, week, month, year, weekday
+
+### Project Files
+
+1. `test.ipynb` used to validate data in each table of our database.
+2. `create_tables.py` contains code for setting up database `sparkifydb` and creates fact and dimensions table.
+3. `etl.ipynb` reads and processes a single file from `song_data` and `log_data` and loads the data into tables.
+4. `etl.py` reads and processes files from `song_data` and `log_data` and loads them into tables.
+5. `sql_queries.py` contains sql queries, dropping and creating fact and dimensions tables in addition to insertion query.
+
+### DATA ANALYSIS
+
+Q: How many users are paid and how many are on free subscription ?
+
+- free : 77
+- paid : 19
