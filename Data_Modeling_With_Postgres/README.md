@@ -67,5 +67,5 @@ $python app.py
 
 Q: How many users are paid and how many are on free subscription ?
 
-- free : 77
-- paid : 19
+- free : 74
+- paid : 22
