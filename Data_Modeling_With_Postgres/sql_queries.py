@@ -12,11 +12,11 @@ songplay_table_create = ("""
     CREATE TABLE IF NOT EXISTS songplays (
         songplayid SERIAL PRIMARY KEY,
         start_time TIMESTAMP,
-        user_id VARCHAR,
-        level VARCHAR,
+        user_id VARCHAR NOT NULL,
+        level VARCHAR NOT NULL,
         song_id VARCHAR,
         artist_id VARCHAR,
-        session_id INT,
+        session_id BIGINT NOT NULL,
         location VARCHAR,
         user_agent TEXT
     );
@@ -28,7 +28,7 @@ user_table_create = ("""
         first_name VARCHAR,
         last_name VARCHAR,
         gender CHAR(1),
-        level VARCHAR
+        level VARCHAR NOT NULL
     );
 """)
 
@@ -67,33 +67,40 @@ time_table_create = ("""
 # INSERT RECORDS
 
 songplay_table_insert = ("""
-    INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent) 
+    INSERT INTO songplays 
+    (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent) 
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
 """)
 
 user_table_insert = ("""
-    INSERT INTO users (user_id, first_name, last_name, gender, level) 
+    INSERT INTO users 
+    (user_id, first_name, last_name, gender, level) 
     VALUES (%s, %s, %s, %s, %s)
     ON CONFLICT (user_id) DO UPDATE
-    SET level = excluded.level
+        SET level = users.level
 """)
 
 song_table_insert = ("""
-    INSERT INTO songs (song_id, title, artist_id, year, duration) 
+    INSERT INTO songs 
+    (song_id, title, artist_id, year, duration) 
     VALUES (%s, %s, %s, %s, %s)
     ON CONFLICT (song_id) DO NOTHING
 """)
 
 artist_table_insert = ("""
-    INSERT INTO artists (artist_id, name, location, latitude, longitude) 
+    INSERT INTO artists 
+    (artist_id, name, location, latitude, longitude) 
     VALUES (%s, %s, %s, %s, %s)
     ON CONFLICT (artist_id) DO UPDATE
-        SET location = excluded.location, latitude = excluded.latitude, longitude = excluded.longitude
+        SET location = excluded.location, 
+            latitude = excluded.latitude, 
+            longitude = excluded.longitude
 """)
 
 
 time_table_insert = ("""
-    INSERT INTO time (start_time, hour, day, week, month, year, weekday) 
+    INSERT INTO time 
+    (start_time, hour, day, week, month, year, weekday) 
     VALUES (%s, %s, %s, %s, %s, %s, %s)
     ON CONFLICT (start_time) DO NOTHING
 """)
@@ -101,8 +108,13 @@ time_table_insert = ("""
 # FIND SONGS
 
 song_select = ("""
-    SELECT s.song_id, a.artist_id from songs s JOIN artists a ON s.artist_id=a.artist_id 
-    WHERE s.title=%s AND a.name=%s AND s.duration=%s
+    SELECT s.song_id, a.artist_id from songs s 
+    JOIN 
+        artists a ON s.artist_id=a.artist_id 
+    WHERE 
+        s.title=%s AND 
+        a.name=%s AND 
+        s.duration=%s
 """)
 
 # QUERY LISTS

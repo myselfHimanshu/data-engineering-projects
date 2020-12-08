@@ -1,3 +1,4 @@
+# import libraries
 import os
 import glob
 import psycopg2
@@ -6,6 +7,11 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """
+    Process a song file and insert records into postgres db tables
+    :param cur: postgres cursor reference
+    :param filepath: json song file path to be processed and loaded
+    """
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -19,14 +25,21 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """
+    Process a log file and insert records into postgres db tables
+    :param cur: postgres cursor reference
+    :param filepath: json log file path to be processed and loaded 
+    """
     # open log file
     df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
     df = df[df.page=='NextSong']
-    df["ts"] = pd.to_datetime(df["ts"], infer_datetime_format=True)
 
     # convert timestamp column to datetime
+    df["ts"] = pd.to_datetime(df["ts"], infer_datetime_format=True)
+
+    # get datetime column
     t = df["ts"]
     
     # insert time data records
@@ -62,6 +75,13 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Function to load songs and logs files data from data source into postgres db.
+    :param cur: database cursor reference
+    :param conn: database connection reference
+    :param filepath: data source directory where data resides
+    :param func: data process and dumping function
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -81,6 +101,9 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    Connecting `sparkify` database and processing and loading songs and logs data. 
+    """
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
