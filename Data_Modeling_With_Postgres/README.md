@@ -60,7 +60,7 @@ DATA_IN_LOCAL_DIRS ---> (Python Script) ---> POSTGRES DB
 Run the program `app.py` as below
 
 ```bash
-$python main.py
+$python app.py
 ```
 
 ### Data Analysis
