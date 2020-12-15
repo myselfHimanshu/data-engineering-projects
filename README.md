@@ -5,4 +5,6 @@ Data engineering Projects
 
 Data Modeling using Postgres
 
+### Project 2
 
+Data Modeling using Cassandra
