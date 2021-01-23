@@ -9,6 +9,9 @@ __pycache__/
 # MAC
 .DS_Store
 
+# config files
+*.cfg
+
 # Distribution / packaging
 .Python
 build/
