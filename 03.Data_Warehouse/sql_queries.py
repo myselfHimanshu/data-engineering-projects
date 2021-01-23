@@ -22,7 +22,7 @@ staging_events_table_create= ("""
         artist          VARCHAR,
         auth            VARCHAR,
         firstName       VARCHAR,
-        gender          CHAR(1),
+        gender          VARCHAR,
         itemInSession   INTEGER,
         lastName        VARCHAR,
         length          FLOAT,
@@ -30,13 +30,13 @@ staging_events_table_create= ("""
         location        VARCHAR,
         method          VARCHAR,
         page            VARCHAR,
-        registration    FLOAT,
+        registration    BIGINT,
         sessionId       BIGINT,
         song            VARCHAR,
         status          INTEGER,
         ts              TIMESTAMP,
         userAgent       VARCHAR,
-        userId          INTEGER
+        userId          VARCHAR
     );
 """)
 
@@ -51,7 +51,7 @@ staging_songs_table_create = ("""
         song_id             VARCHAR,
         title               VARCHAR,
         duration            FLOAT,
-        year                INTEGER CHECK (year>=0)
+        year                INTEGER
     );
 """)
 
@@ -84,7 +84,7 @@ song_table_create = ("""
         song_id     VARCHAR PRIMARY KEY distkey,
         title       VARCHAR,
         artist_id   VARCHAR,
-        year        INTEGER CHECK (year >= 0),
+        year        INTEGER,
         duration    FLOAT
     );
 """)
@@ -102,12 +102,12 @@ artist_table_create = ("""
 time_table_create = ("""
     CREATE TABLE IF NOT EXISTS time (
         start_time  TIMESTAMP PRIMARY KEY sortkey,
-        hour        INTEGER CHECK (hour >= 0),
-        day         INTEGER CHECK (day >= 0),
-        week        INTEGER CHECK (week >= 0),
-        month       INTEGER CHECK (month >= 0),
-        year        INTEGER CHECK (year >= 0),
-        weekday     INTEGER CHECK (weekday >= 0)
+        hour        INTEGER,
+        day         INTEGER,
+        week        INTEGER,
+        month       INTEGER,
+        year        INTEGER,
+        weekday     INTEGER
     );
 """)
 
@@ -117,7 +117,9 @@ staging_events_copy = ("""
     COPY staging_events
     FROM {}
     CREDENTIALS 'aws_iam_role={}'
-    COMPUPDATE OFF region 'us-west-2'
+    COMPUPDATE OFF 
+    REGION 'us-west-2'
+    TIMEFORMAT as 'epochmillisecs'
     TRUNCATECOLUMNS BLANKSASNULL EMPTYASNULL
     FORMAT AS json {};
 """).format(config["S3"]["LOG_DATA"], config["IAM_ROLE"]["ARN"], config["S3"]["LOG_JSONPATH"])
